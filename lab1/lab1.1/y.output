@@ -1,0 +1,383 @@
+Grammar
+
+    0 $accept: lines $end
+
+    1 lines: lines expr ';'
+    2      | lines ';'
+    3      | lines decl ';'
+    4      | lines stmt ';'
+    5      | %empty
+
+    6 decl: TYPE ID
+    7     | TYPE ID EQU expr
+
+    8 stmt: ID EQU expr
+
+    9 expr: expr ADD expr
+   10     | expr SUB expr
+   11     | expr MUL expr
+   12     | expr DIV expr
+   13     | SUB expr
+   14     | lb expr rb
+   15     | NUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+';' (59) 1 2 3 4
+error (256)
+ADD (258) 9
+SUB (259) 10 13
+MUL (260) 11
+DIV (261) 12
+NUMBER (262) 15
+EQU (263) 7 8
+TYPE (264) 6 7
+ID (265) 6 7 8
+rb (266) 14
+lb (267) 14
+UMINUS (268)
+
+
+Nonterminals, with rules where they appear
+
+$accept (15)
+    on left: 0
+lines (16)
+    on left: 1 2 3 4 5, on right: 0 1 2 3 4
+decl (17)
+    on left: 6 7, on right: 3
+stmt (18)
+    on left: 8, on right: 4
+expr (19)
+    on left: 9 10 11 12 13 14 15, on right: 1 7 8 9 10 11 12 13 14
+
+
+State 0
+
+    0 $accept: . lines $end
+
+    $default  reduce using rule 5 (lines)
+
+    lines  go to state 1
+
+
+State 1
+
+    0 $accept: lines . $end
+    1 lines: lines . expr ';'
+    2      | lines . ';'
+    3      | lines . decl ';'
+    4      | lines . stmt ';'
+
+    $end    shift, and go to state 2
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    TYPE    shift, and go to state 5
+    ID      shift, and go to state 6
+    lb      shift, and go to state 7
+    ';'     shift, and go to state 8
+
+    decl  go to state 9
+    stmt  go to state 10
+    expr  go to state 11
+
+
+State 2
+
+    0 $accept: lines $end .
+
+    $default  accept
+
+
+State 3
+
+   13 expr: SUB . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 12
+
+
+State 4
+
+   15 expr: NUMBER .
+
+    $default  reduce using rule 15 (expr)
+
+
+State 5
+
+    6 decl: TYPE . ID
+    7     | TYPE . ID EQU expr
+
+    ID  shift, and go to state 13
+
+
+State 6
+
+    8 stmt: ID . EQU expr
+
+    EQU  shift, and go to state 14
+
+
+State 7
+
+   14 expr: lb . expr rb
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 15
+
+
+State 8
+
+    2 lines: lines ';' .
+
+    $default  reduce using rule 2 (lines)
+
+
+State 9
+
+    3 lines: lines decl . ';'
+
+    ';'  shift, and go to state 16
+
+
+State 10
+
+    4 lines: lines stmt . ';'
+
+    ';'  shift, and go to state 17
+
+
+State 11
+
+    1 lines: lines expr . ';'
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+
+    ADD  shift, and go to state 18
+    SUB  shift, and go to state 19
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+    ';'  shift, and go to state 22
+
+
+State 12
+
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+   13     | SUB expr .
+
+    $default  reduce using rule 13 (expr)
+
+
+State 13
+
+    6 decl: TYPE ID .
+    7     | TYPE ID . EQU expr
+
+    EQU  shift, and go to state 23
+
+    $default  reduce using rule 6 (decl)
+
+
+State 14
+
+    8 stmt: ID EQU . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 24
+
+
+State 15
+
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+   14     | lb expr . rb
+
+    ADD  shift, and go to state 18
+    SUB  shift, and go to state 19
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+    rb   shift, and go to state 25
+
+
+State 16
+
+    3 lines: lines decl ';' .
+
+    $default  reduce using rule 3 (lines)
+
+
+State 17
+
+    4 lines: lines stmt ';' .
+
+    $default  reduce using rule 4 (lines)
+
+
+State 18
+
+    9 expr: expr ADD . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 26
+
+
+State 19
+
+   10 expr: expr SUB . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 27
+
+
+State 20
+
+   11 expr: expr MUL . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 28
+
+
+State 21
+
+   12 expr: expr DIV . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 29
+
+
+State 22
+
+    1 lines: lines expr ';' .
+
+    $default  reduce using rule 1 (lines)
+
+
+State 23
+
+    7 decl: TYPE ID EQU . expr
+
+    SUB     shift, and go to state 3
+    NUMBER  shift, and go to state 4
+    lb      shift, and go to state 7
+
+    expr  go to state 30
+
+
+State 24
+
+    8 stmt: ID EQU expr .
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+
+    ADD  shift, and go to state 18
+    SUB  shift, and go to state 19
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 8 (stmt)
+
+
+State 25
+
+   14 expr: lb expr rb .
+
+    $default  reduce using rule 14 (expr)
+
+
+State 26
+
+    9 expr: expr . ADD expr
+    9     | expr ADD expr .
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 9 (expr)
+
+
+State 27
+
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   10     | expr SUB expr .
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 10 (expr)
+
+
+State 28
+
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   11     | expr MUL expr .
+   12     | expr . DIV expr
+
+    $default  reduce using rule 11 (expr)
+
+
+State 29
+
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+   12     | expr DIV expr .
+
+    $default  reduce using rule 12 (expr)
+
+
+State 30
+
+    7 decl: TYPE ID EQU expr .
+    9 expr: expr . ADD expr
+   10     | expr . SUB expr
+   11     | expr . MUL expr
+   12     | expr . DIV expr
+
+    ADD  shift, and go to state 18
+    SUB  shift, and go to state 19
+    MUL  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 7 (decl)
